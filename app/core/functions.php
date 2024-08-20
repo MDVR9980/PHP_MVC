@@ -75,7 +75,6 @@ function message(string $msg = null, bool $clear = false) {
     $ses     = new Core\Session();
     if(!empty($msg)) {
         $ses->set('message', $msg);
-
     } else
     if(!empty($ses->get('message'))) {
 
@@ -128,7 +127,7 @@ function old_checked(string $key, string $value, string $default = ""):string {
     return '';
 }
 
-function old_value(string $key, mixed $default = "", string $mode = 'post'):mexid {
+function old_value(string $key, mixed $default = "", string $mode = 'post'):mixed {
     $POST = ($mode == 'post') ? $_POST : $_GET;
     if(isset($POST[$key])) {
         return $POST[$key];

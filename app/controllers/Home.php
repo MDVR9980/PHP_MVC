@@ -10,8 +10,7 @@ defined('ROOTPATH') OR exit('Access Denied!');
 class Home {
     use MainController;
     public function index() {
-        $data['username'] = empty($_SESSION['USER']) ? 'USER':$_SESSION['USER']->email;
-        $this->view('home', $data);
+        $this->view('home');
     }   
 
 }
