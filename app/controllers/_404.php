@@ -1,9 +1,11 @@
 <?php
 
+namespace Controller;
+
 defined('ROOTPATH') OR exit('Access Denied!');
 
 class _404 {
-    use Controller;
+    use MainController;
     public function index() {
         echo "404 page not found controller";
     }    

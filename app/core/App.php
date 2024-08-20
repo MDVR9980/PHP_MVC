@@ -28,8 +28,8 @@ class App {
             require $filename;
             $this->controller = "_404";
         }
-
-        $controller = new $this->controller();
+        $mycontroller = '\Controller\\'.$this->controller;
+        $controller = new $mycontroller;
 
         /** select method **/
         if(!empty($URL[1])) {

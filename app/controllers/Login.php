@@ -1,17 +1,19 @@
 <?php
 
+namespace Controller;
+
 defined('ROOTPATH') OR exit('Access Denied!');
 
 /** login class **/
 
 class Login {  
-    use Controller;  
+    use MainController; 
 
     public function index() {  
         $data = []; // Initialize the data array  
 
         if ($_SERVER['REQUEST_METHOD'] == "POST") {  
-            $user = new User; 
+            $user = new \Model\User; 
             $arr['email'] = $_POST['email'];  
             $row = $user->first($arr);  
 

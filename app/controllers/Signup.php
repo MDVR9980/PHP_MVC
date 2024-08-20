@@ -1,17 +1,19 @@
 <?php
 
+namespace Controller;
+
 defined('ROOTPATH') OR exit('Access Denied!');
 
 /** Signup class **/
 
 class Signup {  
-    use Controller;  
+    use MainController;  
     
     public function index() {  
         $data = []; // Initialize the data array  
 
         if ($_SERVER['REQUEST_METHOD'] == "POST") {  
-            $user = new User;  
+            $user = new \Model\User;  
 
             if ($user->validate($_POST)) {  
                 $user->insert($_POST);  

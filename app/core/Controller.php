@@ -1,8 +1,10 @@
 <?php
 
+namespace Controller;
+
 defined('ROOTPATH') OR exit('Access Denied!');
 
-trait Controller {
+trait MainController {
     public function view($name, $data = []) {
         if(!empty($data)) {
             extract($data);
