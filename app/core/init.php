@@ -1,5 +1,7 @@
 <?php
 
+defined('ROOTPATH') OR exit('Access Denied!');
+
 spl_autoload_register(function ($class) {
     require $filename = "../app/models/" . ucfirst($class) . ".php";
 });

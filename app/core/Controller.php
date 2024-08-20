@@ -1,5 +1,7 @@
 <?php
 
+defined('ROOTPATH') OR exit('Access Denied!');
+
 trait Controller {
     public function view($name, $data = []) {
         if(!empty($data)) {
