@@ -39,7 +39,6 @@ class Image
 				
 				default:
 					return $filename;
-					break;
 			}
 
 			$src_w = imagesx($image);

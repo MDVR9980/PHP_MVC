@@ -98,23 +98,17 @@ function URL($key):mixed {
 		case 'page':
 		case 0:
 			return $URL[0] ?? null;
-			break;
 		case 'section':
 		case 'slug':
 		case 1:
 			return $URL[1] ?? null;
-			break;
 		case 'action':
-		case 2:
 			return $URL[2] ?? null;
-			break;
 		case 'id':
 		case 3:
 			return $URL[3] ?? null;
-			break;
 		default:
 			return null;
-			break;
 	}
 
 }
