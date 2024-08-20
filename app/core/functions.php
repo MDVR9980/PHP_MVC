@@ -90,8 +90,7 @@ function message(string $msg = null, bool $clear = false) {
 }
 
 /** return URL variables **/
-function URL($key):mixed
-{
+function URL($key):mixed {
 	$URL = $_GET['url'] ?? 'home';
 	$URL = explode("/", trim($URL,"/"));
 	
@@ -165,8 +164,7 @@ function get_date($date) {
 }
 
 /** comverts image paths from relative to absolute **/
-function add_root_to_images($contents)
-{
+function add_root_to_images($contents) {
 
   preg_match_all('/<img[^>]+>/', $contents, $matches);
   if(is_array($matches) && count($matches) > 0) {
@@ -174,8 +172,7 @@ function add_root_to_images($contents)
     foreach ($matches[0] as $match) {
 
       preg_match('/src="[^"]+/', $match,$matches2);
-      if(!strstr($matches2[0], 'http'))
-      {
+      if(!strstr($matches2[0], 'http')) {
       
         $contents = str_replace($matches2[0], 'src="'.ROOT.'/'.str_replace('src="',"",$matches2[0]), $contents);
       }
@@ -187,10 +184,9 @@ function add_root_to_images($contents)
 }
 
 /** converts images from text editor content to actual files **/
-function remove_images_from_content($content,$folder = "uploads/")
-{
+function remove_images_from_content($content,$folder = "uploads/") {
 
-    if(!file_exists($folder)){
+    if(!file_exists($folder)) {
         mkdir($folder,0777,true);
         file_put_contents($folder."index.php","Access Denied!");
     }
@@ -204,8 +200,7 @@ function remove_images_from_content($content,$folder = "uploads/")
         $image_class = new \Model\Image();
         foreach ($matches[0] as $match) {
             
-            if(strstr($match, "http"))
-            {
+            if(strstr($match, "http")) {
             	//ignore images with links already
             	continue;
             }
@@ -216,8 +211,7 @@ function remove_images_from_content($content,$folder = "uploads/")
             // get the filename
             preg_match('/data-filename="[^\"]+/', $match,$matches3);
 
-            if(strstr($matches2[0], 'data:'))
-            {
+            if(strstr($matches2[0], 'data:')) {
 
               $parts = explode(",",$matches2[0]);
               $basename = $matches3[0] ?? 'basename.jpg';
@@ -240,12 +234,10 @@ function remove_images_from_content($content,$folder = "uploads/")
 }
 
 /** deletes images from text editor content **/
-function delete_images_from_content(string $content, string $content_new = ''):void
-{
+function delete_images_from_content(string $content, string $content_new = ''):void {
  
     //delete images from content
-	if(empty($content_new))
-	{
+	if(empty($content_new)) {
 
     preg_match_all('/<img[^>]+>/', $content, $matches);
 
@@ -255,8 +247,7 @@ function delete_images_from_content(string $content, string $content_new = ''):v
             preg_match('/src="[^"]+/', $match,$matches2);
             $matches2[0] = str_replace('src="',"",$matches2[0]);
 
-            if(file_exists($matches2[0]))
-            {
+            if(file_exists($matches2[0])) {
               unlink($matches2[0]);
             }
 
@@ -278,8 +269,7 @@ function delete_images_from_content(string $content, string $content_new = ''):v
             preg_match('/src="[^"]+/', $match,$matches2);
             $matches2[0] = str_replace('src="',"",$matches2[0]);
 
-            if(file_exists($matches2[0]))
-            {
+            if(file_exists($matches2[0])) {
               $old_images[] = $matches2[0];
             }
 
@@ -293,8 +283,7 @@ function delete_images_from_content(string $content, string $content_new = ''):v
             preg_match('/src="[^"]+/', $match,$matches2);
             $matches2[0] = str_replace('src="',"",$matches2[0]);
 
-            if(file_exists($matches2[0]))
-            {
+            if(file_exists($matches2[0])) {
               $new_images[] = $matches2[0];
             }
 
@@ -305,10 +294,9 @@ function delete_images_from_content(string $content, string $content_new = ''):v
     /** compare and delete all that dont appear in the new array **/
     foreach ($old_images as $img) {
     	
-    	if(!in_array($img, $new_images))
-    	{
+    	if(!in_array($img, $new_images)) {
 
-    		if(file_exists($img)){
+    		if(file_exists($img)) {
     			unlink($img);
     		}
     	}
