@@ -52,9 +52,10 @@ class User {
 	public function signup($data) {
 		if($this->validate($data)) {
 			//add extra user columns here
-			$data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-			$data['date'] = date("Y-m-d H:i:s");
-			$data['date_created'] = date("Y-m-d H:i:s");
+			$pass = md5($this->secretKey . $data['password'] . $this->secretKey);
+            $data['password'] = $pass;
+			// $data['date'] = date("Y-m-d H:i:s");
+			// $data['date_created'] = date("Y-m-d H:i:s");
 
 			$this->insert($data);
 			redirect('login');
@@ -65,9 +66,9 @@ class User {
 		$row = $this->first([$this->loginUniqueColumn=>$data[$this->loginUniqueColumn]]);
 
 		if($row) {
-
+            $pass = md5($this->secretKey . $data['password'] . $this->secretKey);
 			//confirm password
-			if(password_verify($data['password'], $row->password)) {
+			if($row->password == $pass) {
 				$ses = new \Core\Session;
 				$ses->auth($row);
 				redirect('home');

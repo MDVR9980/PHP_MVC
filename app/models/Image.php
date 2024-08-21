@@ -7,18 +7,15 @@ namespace Model;
 
 defined('ROOTPATH') OR exit('Access Denied!');
 
-class Image
-{
+class Image {
 	
 	
-	public function resize($filename,$max_size = 700)
-	{
+	public function resize($filename,$max_size = 700) {
 	
 		/** check what kind of file type it is **/
 		$type = mime_content_type($filename);
 
-		if(file_exists($filename))
-		{
+		if(file_exists($filename)) {
 			switch ($type) {
 
 				case 'image/png':
@@ -44,21 +41,18 @@ class Image
 			$src_w = imagesx($image);
 			$src_h = imagesy($image);
 
-		    if($src_w > $src_h)
-		    {
+		    if($src_w > $src_h) {
 		      //reduce max size if image is smaller
-		      if($src_w < $max_size)
-		      {
+		      if($src_w < $max_size) {
 		        $max_size = $src_w;
 		      }
 
 		      $dst_w = $max_size;
 		      $dst_h = ($src_h / $src_w) * $max_size;
-		    }else{
+		    }else {
 
 		      //reduce max size if image is smaller
-		      if($src_h < $max_size)
-		      {
+		      if($src_h < $max_size) {
 		        $max_size = $src_h;
 		      }
 
@@ -71,8 +65,7 @@ class Image
 		    
 			$dst_image = imagecreatetruecolor($dst_w, $dst_h);
 
-			if($type == 'image/png')
-			{
+			if($type == 'image/png') {
 
 				imagealphablending($dst_image, false);
 				imagesavealpha($dst_image, true );
@@ -110,5 +103,4 @@ class Image
 
 		return $filename;
 	}
-
 }

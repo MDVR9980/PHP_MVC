@@ -18,7 +18,8 @@ class Request {
 
 	/** check if something was posted **/
 	public function posted():bool {
-		if($_SERVER['REQUEST_METHOD'] == "POST" && count($_POST) > 0) {
+		if($_SERVER['REQUEST_METHOD'] == "POST" && count($_POST) > 0)
+		{
 			return true;
 		}
 
@@ -67,9 +68,11 @@ class Request {
 
 	/** get a value from the REQUEST variable **/
 	public function input(string $key, mixed $default = ''):mixed {
+
 		if(isset($_REQUEST[$key])) {
 			return $_REQUEST[$key];
 		}
+
 		return $default;
 	}
 
