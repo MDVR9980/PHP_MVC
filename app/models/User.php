@@ -33,7 +33,23 @@ class User {
     *   alpha_numeric
     *   alpha_symbol
     ********************************/
-    protected $validationRules = [
+    protected $onInsertValidationRules = [
+        'username' => [
+            'alpha_numeric',
+            'required',
+        ],
+        'email' => [
+            'email',
+            'unique',
+            'required',
+        ],
+        'password' => [
+            'not_less_than_8_chars',
+            'required',
+        ],
+    ];
+
+    protected $onUpdateValidationRules = [
         'username' => [
             'alpha_numeric',
             'required',

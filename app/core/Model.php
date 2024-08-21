@@ -130,8 +130,14 @@ Trait Model {
     public function validate($data) {
         $this->errors = [];
 
-        if(!empty($this->validationRules)) {
-            foreach ($this->validationRules as $column => $rules) {
+        if(!empty($this->getPrimaryKey()) && !empty([$this->getPrimaryKey()])) {
+            $validationRules = $this->onUpdateValidationRules;
+        } else {
+            $validationRules = $this->onInsertValidationRules;
+        }
+        
+        if(!empty($validationRules)) {
+            foreach ($validationRules as $column => $rules) {
 
                 if(!isset($data[$column]))
                     continue;

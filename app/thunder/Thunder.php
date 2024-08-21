@@ -10,8 +10,58 @@ class Thunder {
 
     private $version = '1.0.0';
 
-    public function db() {
-        echo "\n\rThis is the db function\n\r";
+    public function db($argv) {
+
+        $mode   = $argv[1] ?? null;
+        $param1 = $argv[2] ?? null;
+
+        switch($mode) {
+            case "db:create":
+
+                /** check if param1 is empty **/
+                if(empty($param1)) {
+                    die("\n\rPlease provide a database name\n\r");
+                }
+                $db = new Database;
+                $query = "create database if not exists " . $param1;
+                $db->query($query);
+
+                die("\n\rDatabase created successfully\n\r");
+
+            case "db:table":
+
+                /** check if param1 is empty **/
+                if(empty($param1)) {
+                    die("\n\rPlease provide a table name\n\r");
+                }
+                $db = new Database;
+                $query = "describe " . $param1;
+                $res = $db->query($query);
+                
+                if($res) {
+                    print_r($res);
+                } else {
+                    echo "\n\rCould not find data for table";
+                }
+                
+                die();
+                
+            case "db:drop":
+                /** check if param1 is empty **/
+                if(empty($param1)) {
+                    die("\n\rPlease provide a database name\n\r");
+                }
+                $db = new Database;
+                $query = "drop database " . $param1;
+                $db->query($query);
+                
+                die("\n\rDatabase deleted successfully\n\r");
+            case "db:seed":
+                //code
+                break;
+            default:
+                die("\n\rUnknown command $argv[1] \n\r");
+        }
     }
 
     public function make($argv) {
@@ -78,7 +128,7 @@ class Thunder {
                 //code
                 break;
             default:
-                die("\n\rUnknown 'make' command!\n\r");
+                die("\n\rUnknown command $argv[1] \n\r");
         }
     }
 

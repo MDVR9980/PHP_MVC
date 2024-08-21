@@ -2,7 +2,7 @@
 
 defined('ROOTPATH') OR exit('Access Denied!');
 
-if($_SERVER['SERVER_NAME'] == 'localhost'){
+if((empty($_SERVER['SERVER_NAME']) && php_sapi_name() == 'cli') || (!empty($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'localhost')) {
     /** database config**/
     define('DBNAME','my_db');
     define('DBHOST','localhost');

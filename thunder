@@ -5,7 +5,11 @@ if(php_sapi_name() !== "cli") {
 }
 
 define("DS", DIRECTORY_SEPARATOR);
+
 define('CPATH', __DIR__ . DS);
+
+define('ROOTPATH', __DIR__ . DS);
+
 chdir(CPATH); 
 
 $action = $argv[1] ?? 'help';
