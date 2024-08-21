@@ -14,7 +14,10 @@ class Thunder {
         echo "\n\rThis is the db function\n\r";
     }
 
-    public function make($file, $mode = null, $classname = null) {
+    public function make($argv) {
+
+        $mode      = $argv[1] ?? null;
+        $classname = $argv[2] ?? null;
 
         /** check if class name is empty **/
         if(empty($classname)) {
