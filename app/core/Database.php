@@ -7,7 +7,7 @@ defined('ROOTPATH') OR exit('Access Denied!');
 Trait Database {
     private function connect() {
         $string = "mysql:hostname=". DBHOST .";dbname=". DBNAME;
-        $conn = new PDO($string, DBUSER, DBPASS);
+        $conn = new \PDO($string, DBUSER, DBPASS);
         return $conn;
     }
 
@@ -17,7 +17,7 @@ Trait Database {
 
         $check = $stmt->execute($data);
         if ($check) {
-           $result = $stmt->fetchAll(PDO::FETCH_OBJ); 
+           $result = $stmt->fetchAll(\PDO::FETCH_OBJ); 
         if(is_array($result) && count($result)){
             return $result;
         }
@@ -32,7 +32,7 @@ Trait Database {
 
         $check = $stmt->execute($data);
         if ($check) {
-           $result = $stmt->fetchAll(PDO::FETCH_OBJ); 
+           $result = $stmt->fetchAll(\PDO::FETCH_OBJ); 
         if(is_array($result) && count($result)){
             return $result[0];
         }

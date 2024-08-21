@@ -1,18 +1,21 @@
-<?php
+<?php 
 
 namespace Controller;
 
 defined('ROOTPATH') OR exit('Access Denied!');
 
-/** logout class **/
+/**
+ * logout class
+ */
+class Logout
+{
+	use MainController;
 
-class Logout {
-    use MainController;
-    public function index() {
-        
-        if(!empty($_SESSION['USER']))
-            unset($_SESSION['USER']);
-        redirect('home');
-    }   
+	public function index()
+	{
+		$ses = new \Core\Session;
+ 		$ses->logout();
+ 		redirect('login');
+	}
 
 }

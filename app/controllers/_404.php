@@ -4,17 +4,12 @@ namespace Controller;
 
 defined('ROOTPATH') OR exit('Access Denied!');
 
-/**
- * home class
- */
-class Home
+class _404
 {
 	use MainController;
-
+	
 	public function index()
 	{
-
-		$this->view('home');
+		$this->view('404');
 	}
-
 }

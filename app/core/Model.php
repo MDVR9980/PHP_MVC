@@ -18,12 +18,12 @@ Trait Model {
 
     public $errors           = [];
 
-    public function findAll(){
+    public function findAll() {
         $query = " select * from $this->table order by $this->order_column $this->order_type limit $this->limit offset $this->offset";
         return $this->query($query);
     }
 
-    public function where($data, $data_not = []){
+    public function where($data, $data_not = []) {
         $keys = array_keys($data);
         $keys_not = array_keys($data_not);
         $query = "select * from $this->table where ";
@@ -40,7 +40,7 @@ Trait Model {
         return $this->query($query, $data);
     }
 
-    public function first($data, $data_not = []){
+    public function first($data, $data_not = []) {
         $keys = array_keys($data);
         $keys_not = array_keys($data_not);
         $query = "select * from $this->table where ";
@@ -61,12 +61,12 @@ Trait Model {
         return false;
     }
 
-    public function insert($data){
+    public function insert($data) {
 
         /** remove unwanted data **/
-        if(!empty($this->allowedColumns)){
+        if(!empty($this->allowedColumns)) {
             foreach ($data as $key => $value) {
-                if(!in_array($key, $this->allowedColumns)){
+                if(!in_array($key, $this->allowedColumns)) {
                     unset($data[$key]);
                 }
             }
@@ -79,12 +79,12 @@ Trait Model {
         return false;
     }
 
-    public function update($id, $data, $id_column = 'id'){
+    public function update($id, $data, $id_column = 'id') {
 
         /** remove unwanted data **/
-        if(!empty($this->allowedColumns)){
+        if(!empty($this->allowedColumns)) {
             foreach ($data as $key => $value) {
-                if(!in_array($key, $this->allowedColumns)){
+                if(!in_array($key, $this->allowedColumns)) {
                     unset($data[$key]);
                 }
             }
@@ -107,7 +107,7 @@ Trait Model {
         return false;
     }
 
-    public function delete($id, $id_column = 'id'){
+    public function delete($id, $id_column = 'id') {
         $data[$id_column] = $id;
         $query = "delete from $this->table where $id_column = :$id_column";
         
@@ -116,4 +116,92 @@ Trait Model {
         return false;
     }
 
+    public function getError($key) {
+        if(!empty($this->errors[$key])) {
+            return $this->errors[$key];
+        }
+        return "";
+    }
+
+    protected function getPrimaryKey () {
+        return $this->primaryKey ?? 'id';
+    }
+
+    public function validate($data) {
+        $this->errors = [];
+
+        if(!empty($this->validationRules)) {
+            foreach ($this->validationRules as $column => $rules) {
+
+                if(!isset($data[$column]))
+                    continue;
+                
+                foreach ($rules as $rule) {
+                    switch ($rule) {
+                        case "required":
+                            if(empty($data[$column]))
+                                $this->errors[$column] = ucfirst($column) . " is required";
+                            break;
+                        
+                        case "email":
+                            if(!filter_var(trim($data[$column]), FILTER_VALIDATE_EMAIL))
+                                $this->errors[$column] = "Invalid email address!";
+                            break;
+
+                        case "alpha":
+                            if(!preg_match("/^[a-zA-Z ]+$/", trim($data[$column])))
+                                $this->errors[$column] = ucfirst($column) . " should only have alphabetical letters without spaces";
+                            break;
+
+                        case "alpha_space":
+                            if(!preg_match("/^[a-zA-Z ]+$/", trim($data[$column])))
+                                $this->errors[$column] = ucfirst($column) . " should only have alphabetical letters & spaces";
+                            break;
+
+                        case "alpha_numeric":
+                            if(!preg_match("/^[a-zA-Z0-9]+$/", trim($data[$column])))
+                                $this->errors[$column] = ucfirst($column) . " should only have alphabetical letters & spaces";
+                            break;
+
+                        case "alpha_numeric_symbol":
+                            if(!preg_match("/^[a-zA-Z0-9\-\_\$\%\*\[\]\(\)\& ]+$/", trim($data[$column])))
+                                $this->errors[$column] = ucfirst($column) . " should only have alphabetical letters & spaces";
+                            break;
+
+                        case "alpha_symbol":
+                            if(!preg_match("/^[a-zA-Z\-\_\$\%\*\[\]\(\)\& ]+$/", trim($data[$column])))
+                                $this->errors[$column] = ucfirst($column) . " should only have alphabetical letters & spaces";
+                            break;
+
+                        case "not_less_than_8_chars":
+                            if(strlen(trim($data[$column])) < 8)
+                                $this->errors[$column] = ucfirst($column) . " should not  be less than 8 characters";
+                            break;
+
+                        case "unique":
+                            $key = $this->getPrimaryKey();
+                            if(!empty($data[$key])) {
+                                //edit mode
+                                if($this->first([$column => $data[$column]], [$key => $data[$key]])) {
+                                    $this->errors[$column] = ucfirst($column) . "should be unique";
+                                } 
+                            } else {
+                                //insert mode
+                                if($this->first([$column => $data[$column]])) 
+                                    $this->errors[$column] = ucfirst($column) . "should be unique";
+                            }
+                            break;
+                        
+                        default:
+                            $this->errors['rules'] = "The rule" . $rule . "was not found!";
+                            break;
+                    }
+                }
+            }
+        }
+        if(empty($this->errors)) {
+            return true;
+        }
+        return false;
+    }
 }

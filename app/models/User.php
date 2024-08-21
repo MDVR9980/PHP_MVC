@@ -9,28 +9,73 @@ class User {
     use Model;
 
     protected $table = "users";
+    protected $primaryKey = "id";
+
+    protected $loginUniqueColumn = 'email';
+
+    protected $secretKey = "@@darkday@@";
+
     protected $allowedColumn = [
+        'username',
         'email',
         'password',
     ];
+    /********************************
+    *   rules include :
+    *   required
+    *   alpha
+    *   email
+    *   numeric
+    *   unique
+    *   symbol
+    *   not_less_than_8_chars
+    *   alpha_numeric_symbol
+    *   alpha_numeric
+    *   alpha_symbol
+    ********************************/
+    protected $validationRules = [
+        'username' => [
+            'alpha_numeric',
+            'required',
+        ],
+        'email' => [
+            'email',
+            'unique',
+            'required',
+        ],
+        'password' => [
+            'not_less_than_8_chars',
+            'required',
+        ],
+    ];
 
-    public function validate($data){
-        $this->errors = [];
+	public function signup($data) {
+		if($this->validate($data)) {
+			//add extra user columns here
+			$data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+			$data['date'] = date("Y-m-d H:i:s");
+			$data['date_created'] = date("Y-m-d H:i:s");
 
-        if(empty($data['email'])){
-            $this->errors['email'] = 'Email is required';
-        } else
-        if(!filter_var($data['email'], FILTER_VALIDATE_EMAIL)){
-            $this->errors['email'] = 'Email is not valid';
-        }
+			$this->insert($data);
+			redirect('login');
+		}
+	}
 
-        if(empty($data['password'])){
-            $this->errors['password'] = 'Password is required';
-        }
+    public function login($data) {
+		$row = $this->first([$this->loginUniqueColumn=>$data[$this->loginUniqueColumn]]);
 
-        if(empty($this->errors)) {
-            return true;
-        }
-        return false;
-    }
+		if($row) {
+
+			//confirm password
+			if(password_verify($data['password'], $row->password)) {
+				$ses = new \Core\Session;
+				$ses->auth($row);
+				redirect('home');
+			}else {
+				$this->errors[$this->loginUniqueColumn] = "Wrong $this->loginUniqueColumn or password";
+			}
+		}else {
+			$this->errors[$this->loginUniqueColumn] = "Wrong $this->loginUniqueColumn or password";
+		}
+	}
 }
