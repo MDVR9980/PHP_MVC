@@ -5,15 +5,13 @@ namespace Controller;
 defined('ROOTPATH') OR exit('Access Denied!');
 
 /**
- * home class
+ * {CLASSNAME} class
  */
-class Home {
+class {CLASSNAME} {
 	use MainController;
 
 	public function index()
 	{
-
-		$this->view('home');
+		$this->view('{classname}');
 	}
-
 }

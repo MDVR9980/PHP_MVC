@@ -19,7 +19,7 @@ if(empty($action)) {
 } else {
     $parts = explode(':', $action);
     if(is_callable([$thunder, $parts[0]])) {
-        call_user_func_array([$thunder, $parts[0]], []);
+        call_user_func_array([$thunder, $parts[0]], $argv);
     } else {
         echo "\n\rThat command was not recognised. Please see below for commands\n\r";
         call_user_func_array([$thunder, 'help'], []);

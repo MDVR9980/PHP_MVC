@@ -8,12 +8,12 @@ defined('ROOTPATH') OR exit('Access Denied!');
 class User {
     use Model;
 
-    protected $table = "users";
-    protected $primaryKey = "id";
+    protected $table = 'users';
+    protected $primaryKey = 'id';
 
     protected $loginUniqueColumn = 'email';
 
-    protected $secretKey = "@@darkday@@";
+    protected $secretKey = '@@darkday@@';
 
     protected $allowedColumn = [
         'username',
