@@ -64,6 +64,32 @@ class Thunder {
         }
     }
 
+    public function list($argv)
+    {
+        $mode       = $argv[1] ?? null;
+
+        switch ($mode) {
+            case 'list:migrations':
+
+                $folder = 'app'.DS.'migrations'.DS;
+                if(!file_exists($folder)) {
+                   die("\n\rNo migration files were found\n\r");
+                }
+
+                $files = glob($folder . "*.php");
+                echo "\n\rMigration files:\n\r";
+
+                foreach ($files as $file) {
+                    echo basename($file) ."\n\r";
+                }
+                break;
+            
+            default:
+                // code...
+                break;
+        }
+    }
+
     public function make($argv) {
 
         $mode      = $argv[1] ?? null;
@@ -122,8 +148,28 @@ class Thunder {
                 }
                 
             case "make:migration":
-                //code
-                break;
+                
+                $folder = 'app'.DS.'migrations'.DS;
+
+                if(!file_exists($folder)) {
+                    mkdir($folder,0777,true);
+                }
+
+                $filename = $folder . date("jS_M_Y_H_i_s_") . ucfirst($classname) . ".php";
+                if(file_exists($filename)) {
+                    die("\n\rThat migration file already exists\n\r");
+                }
+                    
+
+                $sample_file = file_get_contents('app'.DS.'thunder'.DS.'samples'.DS.'migration-sample.php');
+                $sample_file = preg_replace("/\{CLASSNAME\}/", ucfirst($classname), $sample_file);
+                $sample_file = preg_replace("/\{classname\}/", strtolower($classname), $sample_file);
+                
+                if(file_put_contents($filename, $sample_file)) {
+                    die("\n\rMigration file created: " . basename($filename) . " \n\r");
+                }else {
+                    die("\n\rFailed to create Migration file due to an error\n\r");
+                }
             case "make:seeder":
                 //code
                 break;
@@ -132,8 +178,46 @@ class Thunder {
         }
     }
 
-    public function migrate() {
-        echo "\n\rThis is the migrate function\n\r";
+    public function migrate($argv) {
+
+        $mode       = $argv[1] ?? null;
+        $filename   = $argv[2] ?? null;
+
+        $filename = "app".DS."migrations".DS.$filename;
+        if(file_exists($filename)) {
+            require $filename;
+
+            preg_match("/[a-zA-Z]+\.php$/",$filename, $match);
+            $classname = str_replace(".php","",$match[0]);
+
+            $myclass = new ("\Thunder\\$classname")();
+
+            switch ($mode) {
+                case 'migrate':
+                    $myclass->up();
+                    echo ("\n\rTables created successfully\n\r");
+                    break;
+                case 'migrate:rollback':
+                    $myclass->down();
+                    echo ("\n\rTables removed successfully\n\r");
+                    break;
+                case 'migrate:refresh':
+                    $myclass->down();
+                    $myclass->up();
+                    echo ("\n\rTables refreshed successfully\n\r");
+                    break;
+                
+                default:
+                    $myclass->up();
+                    
+                    break;
+            }
+            
+        }else {
+            die("\n\rMigration file could not be found\n\r");
+        }
+
+        echo "\n\rMigration file run successfully: " . basename($filename) . " \n\r";
     }
 
     public function help() {
